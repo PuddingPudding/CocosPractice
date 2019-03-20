@@ -35,6 +35,11 @@ cc.Class({
         player: {
             default: null,
             type: cc.Node
+        },
+        // reference of score label
+        scoreDisplay: {
+            default: null,
+            type: cc.Label
         }
     },
 
@@ -43,8 +48,15 @@ cc.Class({
     onLoad: function onLoad() {
         // obtain the anchor point of ground level on the y axis
         this.groundY = this.ground.y + this.ground.height / 2; // this.ground.top may also work
+
+        // initialize timer
+        this.timer = 0;
+        this.starDuration = 0;
+
         // generate a new star
         this.spawnNewStar();
+        // initialize scoring
+        this.score = 0;
     },
 
 
@@ -56,6 +68,11 @@ cc.Class({
         // set up a random position for the star
         newStar.setPosition(this.getNewStarPosition());
         console.log(newStar.position);
+        newStar.getComponent('Star').game = this;
+
+        // reset timer, randomly choose a value according the scale of star duration
+        this.starDuration = this.minStarDuration + Math.random() * (this.maxStarDuration - this.minStarDuration);
+        this.timer = 0;
     },
 
     getNewStarPosition: function getNewStarPosition() {
@@ -70,11 +87,29 @@ cc.Class({
         return cc.v2(randX, randY);
     },
 
-    start: function start() {}
-}
+    gainScore: function gainScore() {
+        this.score += 1;
+        // update the words of the scoreDisplay Label
+        this.scoreDisplay.string = 'Score: ' + this.score;
+    },
 
-// update (dt) {},
-);
+    start: function start() {},
+
+
+    update: function update(dt) {
+        // update timer for each frame, when a new star is not generated after exceeding duration
+        // invoke the logic of game failure
+        if (this.timer > this.starDuration) {
+            this.gameOver();
+            return;
+        }
+        this.timer += dt;
+    },
+    gameOver: function gameOver() {
+        this.player.stopAllActions(); //stop the jumping action of the player node
+        cc.director.loadScene('Game');
+    }
+});
 
 cc._RF.pop();
         }

@@ -109,7 +109,7 @@
       "__id__": 1
     },
     "_enabled": true,
-    "pickRadius": 0,
+    "pickRadius": 50,
     "_id": ""
   },
   {
@@ -118,7 +118,7 @@
       "__id__": 1
     },
     "asset": {
-      "__id__": 0
+      "__uuid__": "809368f4-bd15-42b5-a69e-6e8345facef3"
     },
     "fileId": "35pehEBA1BT4MJbsDPst6p",
     "sync": false
